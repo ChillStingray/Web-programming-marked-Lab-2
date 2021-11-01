@@ -39,7 +39,7 @@ function Bear() {
      
 }
 
-function setSpeed() {
+function setSpeed() {                                                   // added by me
     bear.dBear = parseInt(document.getElementById("spBear").value);
 }
 
@@ -50,9 +50,16 @@ function start() {
     document.getElementById("spBear").addEventListener("change", setSpeed);
     bees=new Array();
     makeBees();
+    lastStingTime = new Date();
 }
 
 function moveBear(e) {
+
+    if (start != true){
+        start = true;
+        lastStingTime = new Date();
+    }
+
     //codes of the four keys
     const KEYUP = 38;
     const KEYDOWN = 40;
@@ -114,6 +121,7 @@ class Bee {
             this.y = h - ih;
         };
     }
+    
 }
 
 function createBeeImg(wNum) {
@@ -125,7 +133,7 @@ function createBeeImg(wNum) {
     let boardDivY = boardDiv.offsetTop;
     //create the IMG element
     let img = document.createElement("img");
-    img.setAttribute("src", "images/beef.gif");
+    img.setAttribute("src", "./images/beef.gif");                           // added ./ by me
     img.setAttribute("width", "100");
     img.setAttribute("alt", "A bee!");
     img.setAttribute("id", "bee" + wNum);
@@ -142,8 +150,8 @@ function createBeeImg(wNum) {
     return img;
 }
 
-function getRandomInt(max) {
-    return Math.floor(Math.random()*max);
+function getRandomInt(max) {                                                // added by me
+    return Math.floor(Math.random() * max);
 }
 
 function makeBees() {
@@ -164,5 +172,89 @@ function makeBees() {
         i++;
     }
 }
+
+function moveBees() {
+    //get speed input field value
+    let speed = document.getElementById("speedBees").value;
+    //move each bee to a random location
+    for (let i = 0; i < bees.length; i++) {
+        let dx = getRandomInt(2 * speed) - speed;
+        let dy = getRandomInt(2 * speed) - speed;
+        bees[i].move(dx, dy);
+    }
+}
    
+function updateBees() { // update loop for game
+    //move the bees randomly
+    moveBees();
+    //use a fixed update period
+    let period = document.getElementById("periodTimer").value; //modify this to control refresh period
+    //update the timer for the next move
+    updateTimer = setTimeout('updateBees()', period);
+}
+
+function isHit(defender, offender) {
+    if (overlap(defender, offender)) { //check if the two image overlap
+        let score = hits.innerHTML;
+        score = Number(score) + 1; //increment the score
+        hits.innerHTML = score; //display the new score
+        let newStingTime = new Date();
+        let thisDuration = newStingTime - lastStingTime;
+        lastStingTime = newStingTime;
+        let longestDuration = Number(duration.innerHTML);
+        if (longestDuration === 0) {
+            longestDuration = thisDuration;
+        } else {
+            if (longestDuration < thisDuration) longestDuration = thisDuration;
+        }
+        document.getElementById("duration").innerHTML = longestDuration;
+    }
+    if (score === 1000){                                                // added by me
+        clearTimeout(updateTimer);
+        window.log(alert("Game Over!"));
+    }
+}
    
+function overlap(element1, element2) {
+    //consider the two rectangles wrapping the two elements
+    //rectangle of the first element
+    left1 = element1.htmlElement.offsetLeft; 
+    top1 = element1.htmlElement.offsetTop;
+    right1 = element1.htmlElement.offsetLeft + element1.htmlElement.offsetWidth;
+    bottom1 = element1.htmlElement.offsetTop + element1.htmlElement.offsetHeight;
+    //rectangle of the second element
+    left2 = element2.htmlElement.offsetLeft; //e2x
+    top2 = element2.htmlElement.offsetTop; //e2y
+    right2 = element2.htmlElement.offsetLeft + element2.htmlElement.offsetWidth;
+    bottom2 = element2.htmlElement.offsetTop + element2.htmlElement.offsetHeight;
+    //calculate the intersection of the two rectangles
+    x_intersect = Math.max(0, Math.min(right1, right2) - Math.max(left1, left2));
+    y_intersect = Math.max(0, Math.min(bottom1, bottom2) - Math.max(top1, top2));
+    intersectArea = x_intersect * y_intersect;
+    //if intersection is nil no hit
+    if (intersectArea == 0 || isNaN(intersectArea)) {
+        return false;
+    }
+    return true;
+}
+
+function moveBees() {
+    //get speed input field value
+    let speed = document.getElementById("speedBees").value;
+    //move each bee to a random location
+    for (let i = 0; i < bees.length; i++) {
+        let dx = getRandomInt(2 * speed) - speed;
+        let dy = getRandomInt(2 * speed) - speed;
+        bees[i].move(dx, dy);
+        isHit(bees[i], bear); //we add this to count stings
+    }
+}
+
+function addBees() {
+    let num = 1 + nbBees;
+    var bee = new Bee(num);
+    bee.display;
+    bees.push(bee);
+    i++;
+    document.getElementByID("nbBees").value = i;
+}
