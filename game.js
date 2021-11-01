@@ -71,7 +71,7 @@ function start() {
     bear = new Bear();
     // Add an event listener to the keypress event.
     document.addEventListener("keydown", moveBear, false);
-    document.getElementById("spBear").addEventListener("change",setspeed);
+    document.getElementById("bearSpeed").addEventListener("change",setspeed);
     //create new array for bees
     bees = new Array();
     //create bees
@@ -80,7 +80,7 @@ function start() {
 }
 
 function setspeed(){
-    bear.dBear=parseInt(document.getElementById("speedBear").value);
+    bear.dBear=parseInt(document.getElementById("bearSpeed").value);
 }
 
 class Bee {
@@ -179,7 +179,7 @@ function makeBees() {
 
 function moveBees() {
     //get speed input field value
-    let speed = document.getElementById("speedBees").value;
+    let speed = document.getElementById("beeSpeed").value;
     //move each bee to a random location
     for (let i = 0; i < bees.length; i++) {
         let dx = getRandomInt(2 * speed) - speed;
@@ -218,7 +218,7 @@ function isHit(defender, offender) {
         if(score==1000)
         {
             clearTimeout(updateTimer)
-            window.log(alert("GAME OVER!!"));
+            window.log(alert("YOU WERE STUNG 1000 TIMES. GAME OVER!"));
         }
         let newStingTime = new Date();
         let thisDuration = newStingTime - lastStingTime;
