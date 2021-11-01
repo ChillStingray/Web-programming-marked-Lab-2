@@ -9,6 +9,12 @@ function Bear() {
 
     this.y = this.htmlElement.offsetTop;
 
+    this.move = function (xDir, yDir) {
+        this.x += this.dBear * xDir;
+        this.y += this.dBear * yDir;
+        this.display();
+    };
+
     this.move = function(xDir, yDir) {
         this.fitBounds(); //we add this instruction to keep bear within board
         this.x += this.dBear * xDir;
@@ -17,6 +23,7 @@ function Bear() {
     }; 
 
     this.display = function() {
+        this.fitBounds();
         this.htmlElement.style.left = this.x + "px";
         this.htmlElement.style.top = this.y + "px";
         this.htmlElement.style.display = "block";
@@ -50,7 +57,7 @@ function start() {
     document.getElementById("spBear").addEventListener("change", setSpeed);
     bees=new Array();
     makeBees();
-    lastStingTime = new Date();
+    updateBees();
 }
 
 function moveBear(e) {
@@ -89,21 +96,21 @@ class Bee {
         this.x = this.htmlElement.offsetLeft;
         //the top position (y)
         this.y = this.htmlElement.offsetTop;
-        this.move = function(dx, dy) {
+        this.move = function (dx, dy) {
             //move the bees by dx, dy
             this.x += dx;
             this.y += dy;
             this.display();
         };
-        this.display = function() {
+        this.display = function () {
             //adjust position of bee and display it
             this.fitBounds();//add this to adjust to bounds
             this.htmlElement.style.left = this.x + "px";
             this.htmlElement.style.top = this.y + "px";
             this.htmlElement.style.display = "block";
         };
-        this.fitBounds = function() {
-        //check and make sure the bees stays in the board space
+        this.fitBounds = function () {
+            //check and make sure the bees stays in the board space
             let parent = this.htmlElement.parentElement;
             let iw = this.htmlElement.offsetWidth;
             let ih = this.htmlElement.offsetHeight;
@@ -112,16 +119,15 @@ class Bee {
             let w = parent.offsetWidth;
             let h = parent.offsetHeight;
             if (this.x < 0)
-            this.x = 0;
+                this.x = 0;
             if (this.x > w - iw)
-            this.x = w - iw;
+                this.x = w - iw;
             if (this.y < 0)
-            this.y = 0;
+                this.y = 0;
             if (this.y > h - ih)
-            this.y = h - ih;
+                this.y = h - ih;
         };
     }
-    
 }
 
 function createBeeImg(wNum) {
@@ -133,7 +139,7 @@ function createBeeImg(wNum) {
     let boardDivY = boardDiv.offsetTop;
     //create the IMG element
     let img = document.createElement("img");
-    img.setAttribute("src", "./images/beef.gif");                           // added ./ by me
+    img.setAttribute("src", "./images/bee.gif");
     img.setAttribute("width", "100");
     img.setAttribute("alt", "A bee!");
     img.setAttribute("id", "bee" + wNum);
@@ -150,8 +156,8 @@ function createBeeImg(wNum) {
     return img;
 }
 
-function getRandomInt(max) {                                                // added by me
-    return Math.floor(Math.random() * max);
+function getRandomInt(maximum) {                                                // added by me
+    return Math.floor(Math.random() * maximum);
 }
 
 function makeBees() {
@@ -181,6 +187,7 @@ function moveBees() {
         let dx = getRandomInt(2 * speed) - speed;
         let dy = getRandomInt(2 * speed) - speed;
         bees[i].move(dx, dy);
+        isHit(bees[i], bear); //we add this to count stings
     }
 }
    
@@ -198,20 +205,24 @@ function isHit(defender, offender) {
         let score = hits.innerHTML;
         score = Number(score) + 1; //increment the score
         hits.innerHTML = score; //display the new score
+        //calculate longest duration
+
+
+        if(score==1000)
+        {
+            clearTimeout(updateTimer)
+            window.log(alert("GAME OVER!!"));
+        }
         let newStingTime = new Date();
         let thisDuration = newStingTime - lastStingTime;
         lastStingTime = newStingTime;
         let longestDuration = Number(duration.innerHTML);
-        if (longestDuration === 0) {
+        if (longestDuration === 0 || isNaN(longestDuration)) {
             longestDuration = thisDuration;
         } else {
             if (longestDuration < thisDuration) longestDuration = thisDuration;
         }
         document.getElementById("duration").innerHTML = longestDuration;
-    }
-    if (score === 1000){                                                // added by me
-        clearTimeout(updateTimer);
-        window.log(alert("Game Over!"));
     }
 }
    
@@ -238,23 +249,11 @@ function overlap(element1, element2) {
     return true;
 }
 
-function moveBees() {
-    //get speed input field value
-    let speed = document.getElementById("speedBees").value;
-    //move each bee to a random location
-    for (let i = 0; i < bees.length; i++) {
-        let dx = getRandomInt(2 * speed) - speed;
-        let dy = getRandomInt(2 * speed) - speed;
-        bees[i].move(dx, dy);
-        isHit(bees[i], bear); //we add this to count stings
-    }
-}
-
-function addBees() {
-    let num = 1 + nbBees;
-    var bee = new Bee(num);
-    bee.display;
+function addbees() {
+    let number =nbBees+1;
+    var bee=new Bee(number);
+    bee.display();
     bees.push(bee);
     i++;
-    document.getElementByID("nbBees").value = i;
+    document.getElementById("nbBees").value=i;
 }
