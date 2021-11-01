@@ -9,12 +9,12 @@ function Bear() {
 
     this.y = this.htmlElement.offsetTop;
 
-
     this.move = function(xDir, yDir) {
+        this.fitBounds(); //we add this instruction to keep bear within board
         this.x += this.dBear * xDir;
         this.y += this.dBear * yDir;
         this.display();
-    };
+    }; 
 
     this.display = function() {
         this.htmlElement.style.left = this.x + "px";
@@ -36,12 +36,7 @@ function Bear() {
         if (this.y > h - ih) this.y = h - ih;
     };
 
-    this.move = function(xDir, yDir) {
-        this.fitBounds(); //we add this instruction to keep bear within board
-        this.x += this.dBear * xDir;
-        this.y += this.dBear * yDir;
-        this.display();
-        };  
+     
 }
 
 function setSpeed() {
@@ -53,7 +48,7 @@ function start() {
     bear = new Bear();
     document.addEventListener("keydown", moveBear, false);
     document.getElementById("spBear").addEventListener("change", setSpeed);
-    bees = new Array();
+    bees=new Array();
     makeBees();
 }
 
@@ -145,7 +140,7 @@ function createBeeImg(wNum) {
     img.style.top = (y) + "px";
     //return the img object
     return img;
-   }
+}
 
 function getRandomInt(max) {
     return Math.floor(Math.random()*max)
@@ -168,6 +163,6 @@ function makeBees() {
         bees.push(bee); //add the bee object to the bees array
         i++;
     }
-   }
+}
    
    
