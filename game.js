@@ -198,6 +198,15 @@ function updateBees() { // update loop for game
     updateTimer = setTimeout('updateBees()', period);
 }
 
+function addbees() {
+    let number =nbBees+1;
+    var bee=new Bee(number);
+    bee.display();
+    bees.push(bee);
+    i++;
+    document.getElementById("nbBees").value=i;
+}
+
 function isHit(defender, offender) {
     if (overlap(defender, offender)) { //check if the two image overlap
         let score = hits.innerHTML;
@@ -245,13 +254,4 @@ function overlap(element1, element2) {
         return false;
     }
     return true;
-}
-
-function addbees() {
-    let number =nbBees+1;
-    var bee=new Bee(number);
-    bee.display();
-    bees.push(bee);
-    i++;
-    document.getElementById("nbBees").value=i;
 }

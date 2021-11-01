@@ -10,7 +10,7 @@
     position: absolute;
     height: 600px;
     width: 1200px;
-    background-color: rgb(6, 136, 119);
+    background-color: rgb(35, 23, 190);
     align-content: center;
     align-self: center;
 }
@@ -22,19 +22,19 @@
 }
 
 #scores {
-    background-color: rgb(247, 134, 241);
+    background-color: rgb(23, 150, 182);
     align-content: center;
     align-self: center;
 }
 
 .location {
-    color: green;
+    color: rgb(13, 245, 13);
 }
 
 #hits {
-    color: red;
+    color: rgb(10, 10, 10);
 }
 
 #duration {
-    color: blue;
+    color: rgb(12, 12, 12);
 }
