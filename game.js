@@ -143,7 +143,7 @@ function createBeeImg(wNum) {
 }
 
 function getRandomInt(max) {
-    return Math.floor(Math.random()*max)
+    return Math.floor(Math.random()*max);
 }
 
 function makeBees() {
