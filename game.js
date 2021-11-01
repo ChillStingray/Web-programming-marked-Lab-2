@@ -1,4 +1,5 @@
 function Bear() {
+
     this.dBear = 100;
 
     this.htmlElement = document.getElementById("bear");
@@ -12,24 +13,17 @@ function Bear() {
     this.move = function (xDir, yDir) {
         this.x += this.dBear * xDir;
         this.y += this.dBear * yDir;
-        this.display();
+        this.display();                 // to keep bear in bounds, because display is fit in bounds.
     };
 
-    this.move = function(xDir, yDir) {
-        this.fitBounds(); //we add this instruction to keep bear within board
-        this.x += this.dBear * xDir;
-        this.y += this.dBear * yDir;
-        this.display();
-    }; 
-
-    this.display = function() {
+    this.display = function () {
         this.fitBounds();
         this.htmlElement.style.left = this.x + "px";
         this.htmlElement.style.top = this.y + "px";
-        this.htmlElement.style.display = "block";
+        this.htmlElement.style.display = "absolute";
     };
 
-    this.fitBounds = function() {
+    this.fitBounds = function () {
         let parent = this.htmlElement.parentElement;
         let iw = this.htmlElement.offsetWidth;
         let ih = this.htmlElement.offsetHeight;
@@ -42,29 +36,15 @@ function Bear() {
         if (this.y < 0) this.y = 0;
         if (this.y > h - ih) this.y = h - ih;
     };
-
-     
 }
 
-function setSpeed() {                                                   // added by me
-    bear.dBear = parseInt(document.getElementById("spBear").value);
-}
-
-function start() {
-    //create bear
-    bear = new Bear();
-    document.addEventListener("keydown", moveBear, false);
-    document.getElementById("spBear").addEventListener("change", setSpeed);
-    bees=new Array();
-    makeBees();
-    updateBees();
-}
-
+// Handle keyboad events
+// to move the bear
 function moveBear(e) {
-
-    if (start != true){
-        start = true;
-        lastStingTime = new Date();
+    
+    if(start!=true){
+        start=true;
+        lastStingTime =new Date();
     }
 
     //codes of the four keys
@@ -73,17 +53,34 @@ function moveBear(e) {
     const KEYLEFT = 37;
     const KEYRIGHT = 39;
     if (e.keyCode == KEYRIGHT) {
-    bear.move(1, 0)
+        bear.move(1, 0)
     } // right key
     if (e.keyCode == KEYLEFT) {
-    bear.move(-1, 0)
+        bear.move(-1, 0)
     } // left key
     if (e.keyCode == KEYUP) {
-    bear.move(0, -1)
+        bear.move(0, -1)
     } // up key
     if (e.keyCode == KEYDOWN) {
-    bear.move(0, 1)
+        bear.move(0, 1)
     } // down key
+}
+
+function start() {
+    //create bear
+    bear = new Bear();
+    // Add an event listener to the keypress event.
+    document.addEventListener("keydown", moveBear, false);
+    document.getElementById("spBear").addEventListener("change",setspeed);
+    //create new array for bees
+    bees = new Array();
+    //create bees
+    makeBees();
+    updateBees();
+}
+
+function setspeed(){
+    bear.dBear=parseInt(document.getElementById("speedBear").value);
 }
 
 class Bee {
@@ -130,6 +127,7 @@ class Bee {
     }
 }
 
+
 function createBeeImg(wNum) {
     //get dimension and position of board div
     let boardDiv = document.getElementById("board");
@@ -139,7 +137,7 @@ function createBeeImg(wNum) {
     let boardDivY = boardDiv.offsetTop;
     //create the IMG element
     let img = document.createElement("img");
-    img.setAttribute("src", "./images/bee.gif");
+    img.setAttribute("src", "images/bee.gif");
     img.setAttribute("width", "100");
     img.setAttribute("alt", "A bee!");
     img.setAttribute("id", "bee" + wNum);
@@ -156,8 +154,8 @@ function createBeeImg(wNum) {
     return img;
 }
 
-function getRandomInt(maximum) {                                                // added by me
-    return Math.floor(Math.random() * maximum);
+function getRandomInt(valmax) {                         
+    return Math.floor(Math.random() * valmax);
 }
 
 function makeBees() {
@@ -190,12 +188,12 @@ function moveBees() {
         isHit(bees[i], bear); //we add this to count stings
     }
 }
-   
+
 function updateBees() { // update loop for game
     //move the bees randomly
     moveBees();
     //use a fixed update period
-    let period = document.getElementById("periodTimer").value; //modify this to control refresh period
+    let period = document.getElementById("periodTimer").value;//modify this to control refresh period
     //update the timer for the next move
     updateTimer = setTimeout('updateBees()', period);
 }
@@ -225,11 +223,11 @@ function isHit(defender, offender) {
         document.getElementById("duration").innerHTML = longestDuration;
     }
 }
-   
+
 function overlap(element1, element2) {
     //consider the two rectangles wrapping the two elements
     //rectangle of the first element
-    left1 = element1.htmlElement.offsetLeft; 
+    left1 = element1.htmlElement.offsetLeft;
     top1 = element1.htmlElement.offsetTop;
     right1 = element1.htmlElement.offsetLeft + element1.htmlElement.offsetWidth;
     bottom1 = element1.htmlElement.offsetTop + element1.htmlElement.offsetHeight;
