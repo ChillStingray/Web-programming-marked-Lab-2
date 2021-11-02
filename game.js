@@ -154,8 +154,8 @@ function createBeeImg(wNum) {
     return img;
 }
 
-function getRandomInt(maximumValue) {                         
-    return Math.floor(Math.random() * maximumValue);
+function getRandomInt(valmax) {                         
+    return Math.floor(Math.random() * valmax);
 }
 
 function makeBees() {
